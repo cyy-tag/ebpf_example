@@ -6,5 +6,6 @@
         "bpf_core_read.h": "c",
         "common.h": "c",
         "libbpf.h": "c"
-    }
+    },
+    "C_Cpp.default.compilerPath": "/usr/bin/clang++-14"
 }

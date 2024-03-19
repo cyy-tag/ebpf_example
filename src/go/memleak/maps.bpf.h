@@ -32,8 +32,7 @@ bpf_map_lookup_or_try_init(void *map, const void *key, const void *init)
 	if (val)
 		return val;
 
-	// err = bpf_map_update_elem(map, key, init, BPF_NOEXIST);
-	int err;
+	err = bpf_map_update_elem(map, key, init, BPF_NOEXIST);
 	if (err && err != -EEXIST)
 		return 0;
 

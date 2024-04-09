@@ -3,11 +3,12 @@ CLANG ?= clang
 LLVM_STRPIP ?= llvm-strip
 BPFTOOL ?= bpftool
 LIBBPF_SRC := $(abspath ../../libbpf/src)
+LIBBPF_INCLUDE := $(abspath ../../libbpf/include/uapi)
 LIBBPF_OBJ := $(abspath $(OUTPUT)/libbpf.a)
 CFLAGS := -g -Wall
 ARCH := $(shell uname -m | sed 's/x86_64/x86/')
-INCLUDES := -I$(OUTPUT) -I$(OUTPUT)/bpf -I../vmlinux/$(ARCH)
-APPS = ringbuffer
+INCLUDES := -I$(LIBBPF_INCLUDE) -I$(OUTPUT) -I$(OUTPUT)/bpf -I../vmlinux/$(ARCH)
+APPS = ringbuffer hello-buffer-config
 
 ifeq ($(V),1)
 	Q =

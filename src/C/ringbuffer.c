@@ -1,4 +1,4 @@
-#include <error.h>
+#include <errno.h>
 #include <signal.h>
 #include <stdio.h>
 #include <sys/resource.h>

@@ -12,8 +12,8 @@ struct {
     __uint(max_entries, 1 << 24);
 } events SEC(".maps");
 
-SEC("kprobe/__x64_sys_execve")
-int BPF_KPROBE(kprobe_execve, const char* filename, const char* argv, const char* envp)
+SEC("ksyscall/execve")
+int BPF_KPROBE_SYSCALL(kprobe_execve, const char* filename, const char* argv, const char* envp)
 {
     u64 id = bpf_get_current_pid_tgid();
     u32 tgid = id >> 32;

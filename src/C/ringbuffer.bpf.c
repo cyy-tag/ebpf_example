@@ -5,6 +5,8 @@
 #include <bpf_core_read.h>
 #include "common.h"
 
+//ringbuf mamual: https://docs.kernel.org/bpf/ringbuf.html
+
 char __license[] SEC("license") = "Dual MIT/GPL";
 
 struct {

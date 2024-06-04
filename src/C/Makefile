@@ -8,7 +8,7 @@ LIBBPF_OBJ := $(abspath $(OUTPUT)/libbpf.a)
 CFLAGS := -g -Wall
 ARCH := $(shell uname -m | sed 's/x86_64/x86/')
 INCLUDES := -I$(LIBBPF_INCLUDE) -I$(OUTPUT) -I$(OUTPUT)/bpf -I../vmlinux/$(ARCH)
-APPS = ringbuffer hello-buffer-config
+APPS = ringbuffer hello-buffer-config tracepoint_socket
 
 ifeq ($(V),1)
 	Q =

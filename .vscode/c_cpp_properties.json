@@ -14,7 +14,11 @@
                 "/usr/include/x86_64-linux-gnu",
                 "/usr/include"
             ],
-            "defines": [],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
             "cStandard": "c17",
             "cppStandard": "c++14",
             "intelliSenseMode": "linux-clang-x64"

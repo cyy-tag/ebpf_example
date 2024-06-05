@@ -4,7 +4,9 @@
 #内核配置有CONFIG_DEBUG_INFO_BTF才会生成btf信息
 #或者下载对应kernel-debuginfo
 #kernel-debug-debuginfo是Kconfig里面开启了各种debug特性的版本的debuginfo
-#kernel-debuginfo是普通正常线上运行的内核的debuginfo。
+#kernel-debuginfo是普通正常线上运行的内核的debuginfo.
+
+#btfhub预先对各个版本内核制作btf https://github.com/aquasecurity/btfhub
 
 #install pahole
 #download

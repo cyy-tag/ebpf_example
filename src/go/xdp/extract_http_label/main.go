@@ -11,7 +11,7 @@ import (
 	"github.com/cilium/ebpf/link"
 )
 
-//go:generate go run github.com/cilium/ebpf/cmd/bpf2go -target amd64 bpf parser_packet.bpf.c -- -I/usr/include/x86_64-linux-gnu -I../../../../libbpf/src
+//go:generate go run github.com/cilium/ebpf/cmd/bpf2go -target amd64 bpf extract_http_label.bpf.c -- -I/usr/include/x86_64-linux-gnu -I../../../../libbpf/src
 
 func main() {
 
@@ -37,7 +37,7 @@ func main() {
 	defer objs.Close()
 
 	op := link.XDPOptions{
-		Program:   objs.XdpProgSimple,
+		Program:   objs.XdpExtractHttpLabel,
 		Interface: iface.Index,
 	}
 

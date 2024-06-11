@@ -1,5 +1,5 @@
 //go:build ignore
-#include <vmlinux.h>
+#include "../header/parser_header.h"
 #include <bpf_helpers.h>
 #include <bpf_tracing.h>
 #include <bpf_core_read.h>
@@ -11,8 +11,9 @@
 
 char LICENSE[] SEC("license") = "Dual MIT/GPL";
 
-struct hdr_cursor {
-	void *pos;
+struct vlan_hdr {
+	__be16 h_vlan_TCI;
+	__be16 h_vlan_encapsulated_proto;
 };
 
 static __always_inline int proto_is_vlan(__u16 h_proto)
@@ -21,30 +22,14 @@ static __always_inline int proto_is_vlan(__u16 h_proto)
 		  h_proto == bpf_htons(ETH_P_8021AD));
 }
 
-static __always_inline int parse_ethhdr(struct hdr_cursor *nh,
-                void *data_end,
-                struct ethhdr **ethhdr)
+static __always_inline int vlan_tag_pop(struct hdr_cursor *nh, void *data_end, struct xdp_md *ctx)
 {
-  struct ethhdr *eth = nh->pos;
-  int hdrsize = sizeof(*eth);
-
-  if (nh->pos + hdrsize > data_end)
-    return -1;
-  nh->pos += hdrsize;
-  *ethhdr = eth;
-
-  return eth->h_proto;
-}
-
-static __always_inline int vlan_tag_pop(struct xdp_md *ctx, struct ethhdr *eth)
-{
-  void *data_end = (void *)(long)ctx->data_end;
   struct ethhdr eth_cpy;
+  struct ethhdr *eth = nh->eth;
   struct vlan_hdr *vlh;
   __be16 h_proto = 0;
   int vlid;
-
-  if(!proto_is_vlan(eth->h_proto)) 
+  if(!proto_is_vlan(nh->eth->h_proto)) 
     return -1;
 
   vlh = (void *)(eth + 1);
@@ -76,17 +61,15 @@ static __always_inline int vlan_tag_pop(struct xdp_md *ctx, struct ethhdr *eth)
 SEC("xdp")
 int xdp_pop_vlan(struct xdp_md *ctx)
 {
-  void *data_end = (void *)(long)ctx->data_end;
   void *data = (void *)(long)ctx->data;
+  void *data_end = (void *)(long)ctx->data_end;
 
   /* These keep track of the header type and iterator pointer */
   struct hdr_cursor nh = {.pos = data};
   int nh_type;
 
-  struct ethhdr *eth;
-  nh_type = parse_ethhdr(&nh, data_end, &eth);
-  if (nh_type != -1 && proto_is_vlan(eth->h_proto)) {
-    vlan_tag_pop(ctx, eth);
+  if (proto_is_vlan(parse_ethhdr(&nh, data_end))) {
+    vlan_tag_pop(&nh, data_end, ctx);
     bpf_printk("pop vlan tag \n");
   }
 

@@ -1,5 +1,5 @@
 //go:build ignore
-#include <vmlinux.h>
+#include "../header/parser_header.h"
 #include <bpf_helpers.h>
 #include <bpf_tracing.h>
 #include <bpf_core_read.h>
@@ -8,15 +8,6 @@
 #define ETH_ALEN 6
 
 char LICENSE[] SEC("license") = "Dual MIT/GPL";
-
-/* to u64 in host order */
-static inline __u64 ether_addr_to_u64(const __u8 *addr)
-{
-  __u64 u = 0;
-  for(int i = ETH_ALEN - 1; i >= 0; i--)
-    u = u << 8 | addr[i];
-  return u;
-}
 
 SEC("xdp")
 int xdp_prog_simple(struct xdp_md *ctx)

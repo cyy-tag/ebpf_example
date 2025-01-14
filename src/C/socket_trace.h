@@ -1,3 +1,4 @@
+#pragma once
 
 enum syscall_src_func {
 	SYSCALL_FUNC_UNKNOWN,
